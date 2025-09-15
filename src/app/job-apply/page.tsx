@@ -45,7 +45,7 @@ export default function ApplyJob() {
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
         {
-          to_email: companyEmail,
+          to_email: companyEmail.trim(),
           cover_letter: coverLetterText,
           job_title: tabTitles[selectedTab],
           cv_url: cvUrls[selectedTab],
