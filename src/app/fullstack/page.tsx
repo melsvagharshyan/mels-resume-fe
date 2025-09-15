@@ -1,11 +1,12 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import {
   useGetCoverLetterQuery,
   useUpdateCoverLetterMutation,
 } from '../store/cover-letter/cover-letter.api';
 import { FaRegCopy } from 'react-icons/fa';
+import { toast } from 'sonner';
+import { ImSpinner } from 'react-icons/im';
 
 export default function FullstackPage() {
   const type = 'fullstack';
@@ -31,10 +32,10 @@ export default function FullstackPage() {
     try {
       await updateCoverLetter({ type, text }).unwrap();
       setIsEditing(false);
-      alert('Cover letter saved!');
+      toast.success('Cover letter saved!');
     } catch (err) {
       console.error(err);
-      alert('Error saving cover letter');
+      toast.error('Error saving cover letter');
     }
   };
 
@@ -97,7 +98,7 @@ export default function FullstackPage() {
     cursor-pointer
   "
       >
-        {isEditing ? (isUpdating ? 'Saving...' : 'Save') : 'Edit'}
+        {isEditing ? isUpdating ? <ImSpinner className="animate-spin h-5 w-5" /> : 'Save' : 'Edit'}
       </button>
     </div>
   );

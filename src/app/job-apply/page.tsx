@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { useGetCoverLetterQuery } from '../store/cover-letter/cover-letter.api';
+import { toast } from 'sonner';
+import { ImSpinner } from 'react-icons/im';
 
 const tabs = ['frontend', 'backend', 'fullstack'];
 
@@ -24,6 +26,7 @@ export default function ApplyJob() {
   const [selectedTab, setSelectedTab] = useState('frontend');
   const [companyEmail, setCompanyEmail] = useState('');
   const [coverLetterText, setCoverLetterText] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const { data, isLoading } = useGetCoverLetterQuery(selectedTab);
 
@@ -34,9 +37,10 @@ export default function ApplyJob() {
   }, [data]);
 
   const handleSend = async () => {
-    if (!companyEmail) return alert('Please enter company email');
+    if (!companyEmail) return toast.error('Please enter company email');
 
     try {
+      setLoading(true);
       await emailjs.send(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
@@ -48,10 +52,12 @@ export default function ApplyJob() {
         },
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
       );
-      alert('Application sent successfully!');
+      toast.success('Application sent successfully!');
     } catch (error) {
       console.error(error);
-      alert('Failed to send application');
+      toast.error('Failed to send application');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,7 +76,6 @@ export default function ApplyJob() {
           </button>
         ))}
       </div>
-
       <input
         type="email"
         placeholder="Company email"
@@ -78,7 +83,6 @@ export default function ApplyJob() {
         value={companyEmail}
         onChange={(e) => setCompanyEmail(e.target.value)}
       />
-
       <div>
         {isLoading ? (
           <p>Loading cover letter...</p>
@@ -91,12 +95,17 @@ export default function ApplyJob() {
           />
         )}
       </div>
-
       <button
-        className="px-6 py-2 rounded bg-yellow-400 text-white hover:bg-yellow-300 font-medium transition cursor-pointer"
         onClick={handleSend}
+        disabled={loading}
+        className="
+    bg-yellow-400 text-white px-4 py-2 rounded-lg font-medium
+    shadow-md hover:bg-yellow-300 active:scale-95 transition-all
+    disabled:opacity-50 disabled:cursor-not-allowed
+    cursor-pointer flex items-center justify-center
+  "
       >
-        Apply
+        {loading ? <ImSpinner className="animate-spin h-5 w-5" /> : 'Apply'}
       </button>
     </div>
   );

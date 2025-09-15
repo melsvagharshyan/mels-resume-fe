@@ -6,6 +6,8 @@ import {
   useUpdateCoverLetterMutation,
 } from '../store/cover-letter/cover-letter.api';
 import { FaRegCopy } from 'react-icons/fa';
+import { ImSpinner } from 'react-icons/im';
+import { toast } from 'sonner';
 
 export default function BackendPage() {
   const type = 'backend';
@@ -32,10 +34,10 @@ export default function BackendPage() {
     try {
       await updateCoverLetter({ type, text }).unwrap();
       setIsEditing(false);
-      alert('Cover letter saved!');
+      toast.success('Cover letter saved!');
     } catch (err) {
       console.error(err);
-      alert('Error saving cover letter');
+      toast.error('Error saving cover letter');
     }
   };
 
@@ -88,13 +90,13 @@ export default function BackendPage() {
         onClick={isEditing ? handleSave : () => setIsEditing(true)}
         disabled={isUpdating}
         className="
-    bg-yellow-400 text-white px-4 py-2 rounded-lg font-medium
-    shadow-md hover:bg-yellow-300 active:scale-95 transition-all
-    disabled:opacity-50 disabled:cursor-not-allowed
-    cursor-pointer
-  "
+          bg-yellow-400 text-white px-4 py-2 rounded-lg font-medium
+          shadow-md hover:bg-yellow-300 active:scale-95 transition-all
+          disabled:opacity-50 disabled:cursor-not-allowed
+          cursor-pointer flex items-center justify-center gap-2
+        "
       >
-        {isEditing ? (isUpdating ? 'Saving...' : 'Save') : 'Edit'}
+        {isEditing ? isUpdating ? <ImSpinner className="animate-spin h-5 w-5" /> : 'Save' : 'Edit'}
       </button>
     </div>
   );
