@@ -68,7 +68,7 @@ export default function ApplyJob() {
           <button
             key={tab}
             className={`px-4 py-2 rounded font-medium cursor-pointer ${
-              selectedTab === tab ? 'bg-yellow-400 text-white' : 'bg-gray-200 text-gray-800'
+              selectedTab === tab ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-800'
             }`}
             onClick={() => setSelectedTab(tab)}
           >
@@ -79,7 +79,7 @@ export default function ApplyJob() {
       <input
         type="email"
         placeholder="Company email"
-        className="w-full p-2 border rounded"
+        className="w-full p-2 border rounded text-gray-500"
         value={companyEmail}
         onChange={(e) => setCompanyEmail(e.target.value)}
       />
@@ -88,7 +88,7 @@ export default function ApplyJob() {
           <p>Loading cover letter...</p>
         ) : (
           <textarea
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded text-black"
             rows={10}
             value={coverLetterText}
             onChange={(e) => setCoverLetterText(e.target.value)}
@@ -99,8 +99,8 @@ export default function ApplyJob() {
         onClick={handleSend}
         disabled={loading}
         className="
-    bg-yellow-400 text-white px-4 py-2 rounded-lg font-medium
-    shadow-md hover:bg-yellow-300 active:scale-95 transition-all
+    bg-cyan-400 text-white px-4 py-2 rounded-lg font-medium
+    shadow-md hover:bg-cyan-300 active:scale-95 transition-all
     disabled:opacity-50 disabled:cursor-not-allowed
     cursor-pointer flex items-center justify-center
   "

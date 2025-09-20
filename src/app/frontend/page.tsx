@@ -63,7 +63,7 @@ export default function FrontendPage() {
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded shadow">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Front-end Cover Letter</h1>
+        <h1 className="text-2xl font-bold text-black">Front-end Cover Letter</h1>
         <button
           onClick={handleCopy}
           className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium
@@ -77,21 +77,21 @@ export default function FrontendPage() {
 
       {isEditing ? (
         <textarea
-          className="w-full h-64 p-4 border border-gray-300 rounded mb-4 
+          className="w-full text-black h-64 p-4 border border-gray-300 rounded mb-4 
                      focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
       ) : (
-        <p className="whitespace-pre-wrap mb-4">{text}</p>
+        <p className="whitespace-pre-wrap mb-4 text-black">{text}</p>
       )}
 
       <button
         onClick={isEditing ? handleSave : () => setIsEditing(true)}
         disabled={isUpdating}
         className="
-          bg-yellow-400 text-white px-4 py-2 rounded-lg font-medium
-          shadow-md hover:bg-yellow-300 active:scale-95 transition-all
+          bg-cyan-400 text-white px-4 py-2 rounded-lg font-medium
+          shadow-md hover:bg-cyan-300 active:scale-95 transition-all
           disabled:opacity-50 disabled:cursor-not-allowed
           cursor-pointer flex items-center justify-center
         "

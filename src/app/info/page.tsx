@@ -1,6 +1,6 @@
 'use client';
 
-import { FaGithub, FaGlobe, FaLinkedin, FaCopy, FaEnvelope } from 'react-icons/fa';
+import { FaGithub, FaGlobe, FaLinkedin, FaCopy, FaEnvelope, FaPhone } from 'react-icons/fa';
 import { JSX, useState } from 'react';
 
 interface SocialLink {
@@ -8,6 +8,7 @@ interface SocialLink {
   icon: JSX.Element;
   label: string;
   url: string;
+  isCopyOnly?: boolean; // for text-only items (like "Available Immediately")
 }
 
 const socialLinks: SocialLink[] = [
@@ -35,14 +36,27 @@ const socialLinks: SocialLink[] = [
     label: 'Email',
     url: 'mels.vagharshyandev@gmail.com',
   },
+  {
+    id: 'phone',
+    icon: <FaPhone className="text-green-600 w-6 h-6 flex-shrink-0" />,
+    label: 'Phone',
+    url: '+374 (94) 541615',
+  },
+  {
+    id: 'availability',
+    icon: <FaCopy className="text-purple-600 w-6 h-6 flex-shrink-0" />,
+    label: 'Availability',
+    url: 'Available Immediately',
+    isCopyOnly: true,
+  },
 ];
 
 export default function InfoPage() {
   const [copied, setCopied] = useState<string | null>(null);
 
-  const handleCopy = async (url: string, id: string) => {
+  const handleCopy = async (text: string, id: string) => {
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(text);
       setCopied(id);
       setTimeout(() => setCopied(null), 2000);
     } catch (err) {
@@ -63,14 +77,26 @@ export default function InfoPage() {
             >
               <div className="flex items-center space-x-3 min-w-0">
                 {item.icon}
-                <a
-                  href={item.id === 'email' ? `mailto:${item.url}` : item.url}
-                  target={item.id !== 'email' ? '_blank' : undefined}
-                  rel={item.id !== 'email' ? 'noopener noreferrer' : undefined}
-                  className="text-gray-700 hover:text-blue-600 font-medium truncate"
-                >
-                  {item.url}
-                </a>
+                {item.isCopyOnly ? (
+                  <span className="text-gray-700 font-medium truncate">{item.url}</span>
+                ) : (
+                  <a
+                    href={
+                      item.id === 'email'
+                        ? `mailto:${item.url}`
+                        : item.id === 'phone'
+                          ? `tel:${item.url}`
+                          : item.url
+                    }
+                    target={item.id !== 'email' && item.id !== 'phone' ? '_blank' : undefined}
+                    rel={
+                      item.id !== 'email' && item.id !== 'phone' ? 'noopener noreferrer' : undefined
+                    }
+                    className="text-gray-700 hover:text-blue-600 font-medium truncate"
+                  >
+                    {item.url}
+                  </a>
+                )}
               </div>
               <button
                 onClick={() => handleCopy(item.url, item.id)}
