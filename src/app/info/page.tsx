@@ -1,6 +1,14 @@
 'use client';
 
-import { FaGithub, FaGlobe, FaLinkedin, FaCopy, FaEnvelope, FaPhone } from 'react-icons/fa';
+import {
+  FaGithub,
+  FaGlobe,
+  FaLinkedin,
+  FaCopy,
+  FaEnvelope,
+  FaPhone,
+  FaTelegram,
+} from 'react-icons/fa';
 import { JSX, useState } from 'react';
 
 interface SocialLink {
@@ -8,7 +16,7 @@ interface SocialLink {
   icon: JSX.Element;
   label: string;
   url: string;
-  isCopyOnly?: boolean; // for text-only items (like "Available Immediately")
+  isCopyOnly?: boolean; // for text-only items (like "Available Immediately" or Telegram nickname)
 }
 
 const socialLinks: SocialLink[] = [
@@ -37,10 +45,17 @@ const socialLinks: SocialLink[] = [
     url: 'mels.vagharshyandev@gmail.com',
   },
   {
+    id: 'telegram',
+    icon: <FaTelegram className="text-sky-500 w-6 h-6 flex-shrink-0" />,
+    label: 'Telegram',
+    url: '@mels_dev',
+    isCopyOnly: true, // makes it copyable instead of clickable
+  },
+  {
     id: 'phone',
     icon: <FaPhone className="text-green-600 w-6 h-6 flex-shrink-0" />,
     label: 'Phone',
-    url: '+374 (94) 541615',
+    url: '+37494541615',
   },
   {
     id: 'availability',
