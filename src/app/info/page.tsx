@@ -100,7 +100,7 @@ export default function InfoPage() {
               </div>
               <button
                 onClick={() => handleCopy(item.url, item.id)}
-                className="flex items-center justify-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg hover:bg-gray-200 transition text-sm"
+                className="flex items-center cursor-pointer justify-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg hover:bg-gray-200 transition text-sm"
               >
                 <FaCopy className="text-gray-600" />
                 <span className="text-gray-600">{copied === item.id ? 'Copied!' : 'Copy'}</span>

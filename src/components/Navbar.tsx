@@ -48,7 +48,7 @@ const Navbar = () => {
       <div className="hidden md:block">
         <button
           onClick={() => router.push('/job-apply')}
-          className="bg-cyan-400 cursor-pointer text-gray-900 px-4 py-2 rounded-lg font-semibold hover:bg-cyan-300 transition"
+          className="bg-cyan-400 cursor-pointer text-white px-4 py-2 rounded-lg font-semibold hover:bg-cyan-300 transition"
         >
           Apply
         </button>
