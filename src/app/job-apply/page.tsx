@@ -53,6 +53,7 @@ export default function ApplyJob() {
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
       );
       toast.success('Application sent successfully!');
+      setCompanyEmail('');
     } catch (error) {
       console.error(error);
       toast.error('Failed to send application');
