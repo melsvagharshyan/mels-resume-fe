@@ -18,7 +18,7 @@ const Navbar = () => {
           <img
             src="https://res.cloudinary.com/dxfqf6fgv/image/upload/v1746817593/script_oyyrxy.png"
             alt="Logo"
-            className="h-10 w-auto"
+            className="h-13 w-auto"
           />
         </Link>
         <ul className="hidden md:flex space-x-8 items-center">
