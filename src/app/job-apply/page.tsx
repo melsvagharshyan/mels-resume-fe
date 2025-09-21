@@ -1,10 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import emailjs from '@emailjs/browser';
 import { useGetCoverLetterQuery } from '../store/cover-letter/cover-letter.api';
 import { toast } from 'sonner';
 import { ImSpinner } from 'react-icons/im';
+import { ApplyJobSchema, applyJobSchema } from './utils/validation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { cvUrls } from './utils/constants';
 
 const tabs = ['frontend', 'backend', 'fullstack'];
 
@@ -14,100 +18,112 @@ const tabTitles: Record<string, string> = {
   fullstack: 'Sr. Full Stack',
 };
 
-const cvUrls: Record<string, string> = {
-  frontend: 'https://drive.google.com/file/d/1RV1u8EX74Z-asYbgWHKvY1eh8pXcK8du/view?usp=drive_link',
-  backend:
-    'https://drive.google.com/file/d/1RV1u8EX74Z-asYbgWHKvY1eh88373pXcK8du/view?usp=drive_link',
-  fullstack:
-    'https://drive.google.com/file/d/1wMVa6CGvLa_kThUeM5wrX4LbEya8t1_r/view?usp=drive_link',
-};
-
 export default function ApplyJob() {
   const [selectedTab, setSelectedTab] = useState('frontend');
-  const [companyEmail, setCompanyEmail] = useState('');
-  const [coverLetterText, setCoverLetterText] = useState('');
-  const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<ApplyJobSchema>({
+    resolver: zodResolver(applyJobSchema),
+    defaultValues: {
+      companyEmail: '',
+      coverLetterText: '',
+    },
+  });
 
   const { data, isLoading } = useGetCoverLetterQuery(selectedTab);
 
   useEffect(() => {
     if (data?.text) {
-      setCoverLetterText(data.text);
+      setValue('coverLetterText', data.text);
     }
-  }, [data]);
+  }, [data, setValue]);
 
-  const handleSend = async () => {
-    if (!companyEmail) return toast.error('Please enter company email');
-
+  const onSubmit = async (values: ApplyJobSchema) => {
     try {
-      setLoading(true);
       await emailjs.send(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
         {
-          to_email: companyEmail.trim(),
-          cover_letter: coverLetterText,
+          to_email: values.companyEmail.trim(),
+          cover_letter: values.coverLetterText,
           job_title: tabTitles[selectedTab],
           cv_url: cvUrls[selectedTab],
         },
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
       );
-      toast.success('Application sent successfully!');
-      setCompanyEmail('');
+      toast.success('Application sent successfully!', { duration: 1000 });
     } catch (error) {
       console.error(error);
       toast.error('Failed to send application');
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6 bg-white shadow rounded mt-10">
-      <div className="flex space-x-2">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="max-w-4xl mx-auto p-8 space-y-6 bg-gradient-to-br from-white to-gray-50 shadow-xl rounded-2xl mt-10 border border-gray-100"
+    >
+      {/* Tabs */}
+      <div className="flex space-x-3">
         {tabs.map((tab) => (
           <button
+            type="button"
             key={tab}
-            className={`px-4 py-2 rounded font-medium cursor-pointer ${
-              selectedTab === tab ? 'bg-cyan-400 text-white' : 'bg-gray-200 text-gray-800'
-            }`}
+            className={`px-5 py-2.5 rounded-full cursor-pointer font-medium transition-all shadow-sm 
+              ${
+                selectedTab === tab
+                  ? 'bg-cyan-500 text-white shadow-md'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
             onClick={() => setSelectedTab(tab)}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </button>
         ))}
       </div>
-      <input
-        type="email"
-        placeholder="Company email"
-        className="w-full p-2 border rounded text-gray-500"
-        value={companyEmail}
-        onChange={(e) => setCompanyEmail(e.target.value)}
-      />
+
+      {/* Company Email */}
       <div>
-        {isLoading ? (
-          <p>Loading cover letter...</p>
-        ) : (
-          <textarea
-            className="w-full p-2 border rounded text-black"
-            rows={10}
-            value={coverLetterText}
-            onChange={(e) => setCoverLetterText(e.target.value)}
-          />
+        <input
+          type="email"
+          placeholder="Company email"
+          className="w-full p-3 border border-gray-200 rounded-xl shadow-sm focus:ring focus:ring-cyan-400 focus:border-cyan-400 outline-none transition text-gray-700"
+          {...register('companyEmail')}
+        />
+        {errors.companyEmail && (
+          <p className="text-red-500 text-sm">{errors.companyEmail.message}</p>
         )}
       </div>
+
+      {/* Cover Letter */}
+      <div>
+        {isLoading ? (
+          <p className="text-gray-500 italic">Loading cover letter...</p>
+        ) : (
+          <textarea
+            className="w-full p-4 border border-gray-200 rounded-xl shadow-sm focus:ring focus:ring-cyan-400 focus:border-cyan-400 outline-none transition text-gray-800 resize-none overflow-y-auto max-h-[400px] 
+            scrollbar-thin scrollbar-thumb-cyan-400 scrollbar-track-gray-100"
+            rows={12}
+            {...register('coverLetterText')}
+          />
+        )}
+        {errors.coverLetterText && (
+          <p className="text-red-500 text-sm">{errors.coverLetterText.message}</p>
+        )}
+      </div>
+
+      {/* Submit button */}
       <button
-        onClick={handleSend}
-        disabled={loading}
-        className="
-    bg-cyan-400 text-white px-4 py-2 rounded-lg font-medium
-    shadow-md hover:bg-cyan-300 active:scale-95 transition-all
-    disabled:opacity-50 disabled:cursor-not-allowed
-    cursor-pointer flex items-center justify-center
-  "
+        type="submit"
+        disabled={isSubmitting}
+        className="bg-cyan-500 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-cyan-400 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
-        {loading ? <ImSpinner className="animate-spin h-5 w-5" /> : 'Apply'}
+        {isSubmitting ? <ImSpinner className="animate-spin h-5 w-5" /> : 'Apply'}
       </button>
-    </div>
+    </form>
   );
 }

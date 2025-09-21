@@ -4,87 +4,90 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { links } from './utils/constants';
 
 const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
-  const links = [
-    { name: 'Front-end', href: '/frontend' },
-    { name: 'Backend', href: '/backend' },
-    { name: 'Full-stack', href: '/fullstack' },
-    { name: 'Info', href: '/info' },
-  ];
-
   return (
-    <nav className="bg-gray-800 text-white px-6 py-4 flex items-center justify-between relative">
-      {/* Logo */}
-      <Link href="/" className="flex items-center">
-        <img
-          src="https://res.cloudinary.com/dxfqf6fgv/image/upload/v1746817593/script_oyyrxy.png"
-          alt="Logo"
-          className="h-10 w-auto"
-        />
-      </Link>
-
-      {/* Desktop Menu */}
-      <ul className="hidden md:flex space-x-6">
-        {links.map((link) => (
-          <li key={link.href}>
-            <Link
-              href={link.href}
-              className={`hover:text-cyan-400 transition-colors ${
-                pathname === link.href ? 'text-cyan-400 font-semibold' : ''
-              }`}
-            >
-              {link.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      {/* Apply Button (Desktop) */}
-      <div className="hidden md:block">
+    <nav className="bg-gray-900 text-white px-6 py-4 shadow-md sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <Link href="/" className="flex items-center space-x-2">
+          <img
+            src="https://res.cloudinary.com/dxfqf6fgv/image/upload/v1746817593/script_oyyrxy.png"
+            alt="Logo"
+            className="h-10 w-auto"
+          />
+        </Link>
+        <ul className="hidden md:flex space-x-8 items-center">
+          {links.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className={`relative px-2 py-1 transition-colors duration-200
+          ${
+            pathname === link.href
+              ? 'text-cyan-400 font-medium'
+              : 'text-gray-200 hover:text-cyan-400 font-normal'
+          }`}
+              >
+                {link.name}
+                {pathname === link.href && (
+                  <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-cyan-400 rounded-full"></span>
+                )}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className="hidden md:block">
+          <button
+            onClick={() => router.push('/job-apply')}
+            className="bg-cyan-500 hover:bg-cyan-400 transition px-5 py-2 rounded-xl shadow-md font-semibold cursor-pointer"
+          >
+            Apply
+          </button>
+        </div>
         <button
-          onClick={() => router.push('/job-apply')}
-          className="bg-cyan-400 cursor-pointer text-white px-4 py-2 rounded-lg font-semibold hover:bg-cyan-300 transition"
+          className="md:hidden text-2xl p-2 rounded-md hover:bg-gray-800 transition"
+          onClick={() => setIsOpen(!isOpen)}
         >
-          Apply
+          {isOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
-
-      {/* Mobile Hamburger */}
-      <button className="md:hidden text-2xl" onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? <FaTimes /> : <FaBars />}
-      </button>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="absolute top-16 left-0 w-full bg-gray-900 text-white flex flex-col items-center space-y-4 py-6 md:hidden shadow-lg z-50">
+      <div
+        className={`md:hidden bg-gray-900 overflow-hidden transition-all duration-300 ${
+          isOpen ? 'max-h-96 py-6' : 'max-h-0'
+        }`}
+      >
+        <ul className="flex flex-col items-center space-y-4">
           {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`hover:text-cyan-400 transition-colors ${
-                pathname === link.href ? 'text-cyan-400 font-semibold' : ''
-              }`}
-              onClick={() => setIsOpen(false)}
-            >
-              {link.name}
-            </Link>
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className={`text-white text-lg px-4 py-2 rounded-lg transition-colors duration-200
+                  ${pathname === link.href ? 'bg-cyan-500 font-semibold' : 'hover:bg-cyan-700'}
+                `}
+                onClick={() => setIsOpen(false)}
+              >
+                {link.name}
+              </Link>
+            </li>
           ))}
+        </ul>
+        <div className="flex justify-center mt-4">
           <button
             onClick={() => {
               router.push('/job-apply');
               setIsOpen(false);
             }}
-            className="bg-cyan-400 cursor-pointer text-white px-4 py-2 rounded-lg font-semibold hover:bg-cyan-300 transition"
+            className="bg-cyan-500 hover:bg-cyan-400 transition px-6 py-2 rounded-xl shadow-md font-semibold cursor-pointer"
           >
             Apply
           </button>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
