@@ -120,7 +120,7 @@ export default function ApplyJob() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="bg-cyan-500 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-cyan-400 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="bg-cyan-500 cursor-pointer text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-cyan-400 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {isSubmitting ? <ImSpinner className="animate-spin h-5 w-5" /> : 'Apply'}
       </button>
