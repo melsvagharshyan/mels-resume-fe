@@ -25,6 +25,7 @@ export default function ApplyJob() {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<ApplyJobSchema>({
     resolver: zodResolver(applyJobSchema),
@@ -55,7 +56,13 @@ export default function ApplyJob() {
         },
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
       );
+
       toast.success('Application sent successfully!', { duration: 1000 });
+
+      reset({
+        companyEmail: '',
+        coverLetterText: data?.text || '',
+      });
     } catch (error) {
       console.error(error);
       toast.error('Failed to send application');
@@ -99,7 +106,6 @@ export default function ApplyJob() {
         )}
       </div>
 
-      {/* Cover Letter */}
       <div>
         {isLoading ? (
           <p className="text-gray-500 italic">Loading cover letter...</p>
@@ -116,7 +122,6 @@ export default function ApplyJob() {
         )}
       </div>
 
-      {/* Submit button */}
       <button
         type="submit"
         disabled={isSubmitting}
