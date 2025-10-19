@@ -92,7 +92,6 @@ export default function ApplyJob() {
         ))}
       </div>
 
-      {/* Company Email */}
       <div>
         <input
           type="email"
