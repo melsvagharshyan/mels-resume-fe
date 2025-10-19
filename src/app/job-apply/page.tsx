@@ -74,7 +74,6 @@ export default function ApplyJob() {
       onSubmit={handleSubmit(onSubmit)}
       className="max-w-4xl mx-auto p-8 space-y-6 bg-gradient-to-br from-white to-gray-50 shadow-xl rounded-2xl mt-10 border border-gray-100"
     >
-      {/* Tabs */}
       <div className="flex space-x-3">
         {tabs.map((tab) => (
           <button
