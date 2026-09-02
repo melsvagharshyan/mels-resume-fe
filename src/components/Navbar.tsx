@@ -14,12 +14,8 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-900 text-white px-6 py-4 shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
-          <img
-            src="https://res.cloudinary.com/dxfqf6fgv/image/upload/v1746817593/script_oyyrxy.png"
-            alt="Logo"
-            className="h-13 w-auto"
-          />
+        <Link href="/" className="flex items-center">
+          <span className="text-2xl font-bold tracking-wide text-cyan-400">Mels</span>
         </Link>
         <ul className="hidden md:flex space-x-8 items-center">
           {links.map((link) => (

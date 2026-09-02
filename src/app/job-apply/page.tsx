@@ -3,12 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import emailjs from '@emailjs/browser';
-import { useGetCoverLetterQuery } from '../store/cover-letter/cover-letter.api';
 import { toast } from 'sonner';
 import { ImSpinner } from 'react-icons/im';
 import { ApplyJobSchema, applyJobSchema } from './utils/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { cvUrls } from './utils/constants';
+import { coverLetterTexts, cvUrls } from './utils/constants';
 
 const tabs = ['frontend', 'backend', 'fullstack'];
 
@@ -31,17 +30,13 @@ export default function ApplyJob() {
     resolver: zodResolver(applyJobSchema),
     defaultValues: {
       companyEmail: '',
-      coverLetterText: '',
+      coverLetterText: coverLetterTexts.frontend,
     },
   });
 
-  const { data, isLoading } = useGetCoverLetterQuery(selectedTab);
-
   useEffect(() => {
-    if (data?.text) {
-      setValue('coverLetterText', data.text);
-    }
-  }, [data, setValue]);
+    setValue('coverLetterText', coverLetterTexts[selectedTab]);
+  }, [selectedTab, setValue]);
 
   const onSubmit = async (values: ApplyJobSchema) => {
     try {
@@ -61,7 +56,7 @@ export default function ApplyJob() {
 
       reset({
         companyEmail: '',
-        coverLetterText: data?.text || '',
+        coverLetterText: coverLetterTexts[selectedTab],
       });
     } catch (error) {
       console.error(error);
@@ -105,16 +100,13 @@ export default function ApplyJob() {
       </div>
 
       <div>
-        {isLoading ? (
-          <p className="text-gray-500 italic">Loading cover letter...</p>
-        ) : (
-          <textarea
-            className="w-full p-4 border border-gray-200 rounded-xl shadow-sm focus:ring focus:ring-cyan-400 focus:border-cyan-400 outline-none transition text-gray-800 resize-none overflow-y-auto max-h-[400px] 
+        <textarea
+          className="w-full p-4 border border-gray-200 rounded-xl shadow-sm focus:ring focus:ring-cyan-400 focus:border-cyan-400 outline-none transition text-gray-800 resize-none overflow-y-auto max-h-[400px] 
             scrollbar-thin scrollbar-thumb-cyan-400 scrollbar-track-gray-100"
-            rows={12}
-            {...register('coverLetterText')}
-          />
-        )}
+          rows={12}
+          placeholder="Write your cover letter..."
+          {...register('coverLetterText')}
+        />
         {errors.coverLetterText && (
           <p className="text-red-500 text-sm">{errors.coverLetterText.message}</p>
         )}

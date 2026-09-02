@@ -48,7 +48,7 @@ const socialLinks: SocialLink[] = [
     id: 'telegram',
     icon: <FaTelegram className="text-sky-500 w-6 h-6 flex-shrink-0" />,
     label: 'Telegram',
-    url: '@mels_dev',
+    url: '@mels_develop',
     isCopyOnly: true, // makes it copyable instead of clickable
   },
   {
