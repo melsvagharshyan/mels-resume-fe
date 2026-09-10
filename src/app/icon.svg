@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .mark { fill: #0a0a0a; }
+    .letter { fill: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      .mark { fill: #f5f5f5; }
+      .letter { fill: #0a0a0a; }
+    }
+  </style>
+  <rect class="mark" width="32" height="32" rx="9"/>
+  <text
+    class="letter"
+    x="16"
+    y="22"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="16"
+    font-weight="700"
+  >M</text>
+</svg>

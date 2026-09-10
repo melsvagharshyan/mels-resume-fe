@@ -22,8 +22,24 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 const STORAGE_KEY = 'mels-theme';
 
+function applyFavicon(theme: Theme) {
+  const href = theme === 'dark' ? '/favicon-dark.svg' : '/favicon-light.svg';
+  let link = document.querySelector<HTMLLinkElement>('link[data-theme-icon="true"]');
+
+  if (!link) {
+    link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/svg+xml';
+    link.setAttribute('data-theme-icon', 'true');
+    document.head.appendChild(link);
+  }
+
+  link.href = href;
+}
+
 function applyTheme(theme: Theme) {
   document.documentElement.setAttribute('data-theme', theme);
+  applyFavicon(theme);
 }
 
 function readStoredTheme(): Theme {
