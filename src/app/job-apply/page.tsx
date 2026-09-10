@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import emailjs from '@emailjs/browser';
 import { toast } from 'sonner';
 import { ImSpinner } from 'react-icons/im';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +10,7 @@ import { CoverLetterField, EmailField } from './components/ApplyFields';
 import RoleTabs from './components/RoleTabs';
 import { ApplyJobSchema, applyJobSchema } from './utils/validation';
 import { coverLetterTexts, cvUrls, tabTitles } from './utils/constants';
+import { sendApplication } from './utils/helpers';
 import type { ApplyTab } from './utils/types';
 
 export default function ApplyJob() {
@@ -38,17 +38,12 @@ export default function ApplyJob() {
 
   const onSubmit = async (values: ApplyJobSchema) => {
     try {
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        {
-          to_email: values.companyEmail.trim(),
-          cover_letter: values.coverLetterText,
-          job_title: tabTitles[selectedTab],
-          cv_url: cvUrls[selectedTab],
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
-      );
+      await sendApplication({
+        toEmail: values.companyEmail,
+        coverLetter: values.coverLetterText,
+        jobTitle: tabTitles[selectedTab],
+        cvUrl: cvUrls[selectedTab],
+      });
 
       toast.success('Application sent successfully!', { duration: 1000 });
 

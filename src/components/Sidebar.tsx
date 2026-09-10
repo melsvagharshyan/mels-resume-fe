@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiSend, FiUser } from 'react-icons/fi';
+import { FiMail, FiSend, FiUser } from 'react-icons/fi';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 import { navItems } from './utils/constants';
 
 const icons = {
   Apply: FiSend,
+  'HR emails': FiMail,
   Info: FiUser,
 } as const;
 
