@@ -1,6 +1,4 @@
-export const links = [
-  { name: 'Front-end', href: '/frontend' },
-  { name: 'Backend', href: '/backend' },
-  { name: 'Full-stack', href: '/fullstack' },
+export const navItems = [
+  { name: 'Apply', href: '/job-apply' },
   { name: 'Info', href: '/info' },
-];
+] as const;

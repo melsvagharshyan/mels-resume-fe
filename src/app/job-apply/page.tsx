@@ -1,27 +1,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import emailjs from '@emailjs/browser';
 import { toast } from 'sonner';
 import { ImSpinner } from 'react-icons/im';
-import { ApplyJobSchema, applyJobSchema } from './utils/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { coverLetterTexts, cvUrls } from './utils/constants';
-
-const tabs = ['frontend', 'backend', 'fullstack'];
-
-const tabTitles: Record<string, string> = {
-  frontend: 'Sr. Front-end',
-  backend: 'Sr. Back-end',
-  fullstack: 'Sr. Full Stack',
-};
+import Button from '@/components/ui/Button';
+import { CoverLetterField, EmailField } from './components/ApplyFields';
+import RoleTabs from './components/RoleTabs';
+import { ApplyJobSchema, applyJobSchema } from './utils/validation';
+import { coverLetterTexts, cvUrls, tabTitles } from './utils/constants';
+import type { ApplyTab } from './utils/types';
 
 export default function ApplyJob() {
-  const [selectedTab, setSelectedTab] = useState('frontend');
+  const [selectedTab, setSelectedTab] = useState<ApplyTab>('frontend');
 
   const {
-    register,
+    control,
     handleSubmit,
     setValue,
     reset,
@@ -33,6 +29,8 @@ export default function ApplyJob() {
       coverLetterText: coverLetterTexts.frontend,
     },
   });
+
+  const companyEmail = useWatch({ control, name: 'companyEmail' });
 
   useEffect(() => {
     setValue('coverLetterText', coverLetterTexts[selectedTab]);
@@ -65,60 +63,37 @@ export default function ApplyJob() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="max-w-4xl mx-auto p-8 space-y-6 bg-gradient-to-br from-white to-gray-50 shadow-xl rounded-2xl mt-10 border border-gray-100"
-    >
-      <div className="flex space-x-3">
-        {tabs.map((tab) => (
-          <button
-            type="button"
-            key={tab}
-            className={`px-5 py-2.5 rounded-full cursor-pointer font-medium transition-all shadow-sm 
-              ${
-                selectedTab === tab
-                  ? 'bg-cyan-500 text-white shadow-md'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            onClick={() => setSelectedTab(tab)}
-          >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      <div>
-        <input
-          type="email"
-          placeholder="Company email"
-          className="w-full p-3 border border-gray-200 rounded-xl shadow-sm focus:ring focus:ring-cyan-400 focus:border-cyan-400 outline-none transition text-gray-700"
-          {...register('companyEmail')}
-        />
-        {errors.companyEmail && (
-          <p className="text-red-500 text-sm">{errors.companyEmail.message}</p>
-        )}
-      </div>
-
-      <div>
-        <textarea
-          className="w-full p-4 border border-gray-200 rounded-xl shadow-sm focus:ring focus:ring-cyan-400 focus:border-cyan-400 outline-none transition text-gray-800 resize-none overflow-y-auto max-h-[400px] 
-            scrollbar-thin scrollbar-thumb-cyan-400 scrollbar-track-gray-100"
-          rows={12}
-          placeholder="Write your cover letter..."
-          {...register('coverLetterText')}
-        />
-        {errors.coverLetterText && (
-          <p className="text-red-500 text-sm">{errors.coverLetterText.message}</p>
-        )}
-      </div>
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="bg-cyan-500 cursor-pointer text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-cyan-400 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+    <section className="flex h-full min-h-0 flex-col p-3 pl-0">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="glass-panel flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] p-4"
       >
-        {isSubmitting ? <ImSpinner className="animate-spin h-5 w-5" /> : 'Apply'}
-      </button>
-    </form>
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h1 className="text-xl font-bold tracking-tight text-[var(--foreground)]">Quick apply</h1>
+          <p className="rounded-full border border-[var(--border)] px-2.5 py-1 text-xs text-[var(--muted)]">
+            {tabTitles[selectedTab]}
+          </p>
+        </div>
+
+        <div className="grid min-h-0 flex-1 gap-3 lg:grid-cols-[240px_minmax(0,1fr)]">
+          <div className="flex min-h-0 flex-col gap-3">
+            <RoleTabs selectedTab={selectedTab} onSelect={setSelectedTab} />
+            <EmailField control={control} errors={errors} />
+            <div className="mt-auto space-y-2">
+              <p className="truncate text-xs text-[var(--muted)]">
+                To: {companyEmail?.trim() || 'company email'}
+              </p>
+              <Button type="submit" loading={isSubmitting} className="w-full rounded-2xl py-2.5 text-sm">
+                {isSubmitting ? <ImSpinner className="h-5 w-5 animate-spin" /> : 'Send application'}
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex min-h-0 flex-col">
+            <CoverLetterField control={control} errors={errors} />
+          </div>
+        </div>
+      </form>
+    </section>
   );
 }
