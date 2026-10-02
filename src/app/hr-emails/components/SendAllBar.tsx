@@ -1,5 +1,6 @@
 'use client';
 
+import { FiRefreshCw } from 'react-icons/fi';
 import { ImSpinner } from 'react-icons/im';
 import Button from '@/components/ui/Button';
 import RoleTabs from '@/app/job-apply/components/RoleTabs';
@@ -13,6 +14,8 @@ type SendAllBarProps = {
   progress: number;
   total: number;
   onSendAll: () => void;
+  isUpdating: boolean;
+  onUpdate: () => void;
 };
 
 export default function SendAllBar({
@@ -22,6 +25,8 @@ export default function SendAllBar({
   progress,
   total,
   onSendAll,
+  isUpdating,
+  onUpdate,
 }: SendAllBarProps) {
   return (
     <div className="mb-3 space-y-3 border-b border-[var(--border)] pb-3">
@@ -29,7 +34,8 @@ export default function SendAllBar({
         <div>
           <h1 className="text-xl font-bold tracking-tight text-[var(--foreground)]">HR emails</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Send the current cover letter and CV to all {total} contacts.
+            Fetch React / Front-End companies from the last 10 Djinni pages, then send the current
+            cover letter and CV to all {total} contacts.
           </p>
         </div>
         <p className="rounded-full border border-[var(--border)] px-2.5 py-1 text-xs text-[var(--muted)]">
@@ -39,20 +45,43 @@ export default function SendAllBar({
 
       <RoleTabs selectedTab={selectedTab} onSelect={onSelectTab} />
 
-      <Button
-        onClick={onSendAll}
-        loading={isSending}
-        className="w-full rounded-2xl py-2.5 text-sm sm:w-auto sm:min-w-[220px]"
-      >
-        {isSending ? (
-          <>
-            <ImSpinner className="h-4 w-4 animate-spin" />
-            Sending {progress}/{total}
-          </>
-        ) : (
-          'Send all'
-        )}
-      </Button>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button
+          variant="secondary"
+          onClick={onUpdate}
+          loading={isUpdating}
+          disabled={isSending}
+          className="w-full rounded-2xl py-2.5 text-sm sm:w-auto sm:min-w-[180px]"
+        >
+          {isUpdating ? (
+            <>
+              <ImSpinner className="h-4 w-4 animate-spin" />
+              Updating...
+            </>
+          ) : (
+            <>
+              <FiRefreshCw className="h-4 w-4" />
+              Update
+            </>
+          )}
+        </Button>
+
+        <Button
+          onClick={onSendAll}
+          loading={isSending}
+          disabled={isUpdating || total === 0}
+          className="w-full rounded-2xl py-2.5 text-sm sm:w-auto sm:min-w-[220px]"
+        >
+          {isSending ? (
+            <>
+              <ImSpinner className="h-4 w-4 animate-spin" />
+              Sending {progress}/{total}
+            </>
+          ) : (
+            'Send all'
+          )}
+        </Button>
+      </div>
     </div>
   );
 }

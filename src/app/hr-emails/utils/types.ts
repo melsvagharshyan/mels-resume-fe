@@ -1,6 +1,3 @@
-export type HrCompany = {
-  id: number;
-  company: string;
-  focus: string;
-  email: string;
-};
+import type { HrContactDto } from '@/app/store/hr-emails/types';
+
+export type HrCompany = HrContactDto;
