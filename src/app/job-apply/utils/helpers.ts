@@ -1,15 +1,26 @@
+import { DEFAULT_EMAIL_TEMPLATE_ID, type EmailTemplateId } from '@/lib/email-templates';
+import { loadSelectedEmailTemplateId } from '@/app/email-templates/utils/helpers';
+
 type SendApplicationParams = {
   toEmail: string;
   coverLetter: string;
   jobTitle: string;
   cvUrl: string;
+  templateId?: EmailTemplateId;
 };
+
+function resolveTemplateId(templateId?: EmailTemplateId): EmailTemplateId {
+  if (templateId) return templateId;
+  if (typeof window !== 'undefined') return loadSelectedEmailTemplateId();
+  return DEFAULT_EMAIL_TEMPLATE_ID;
+}
 
 export async function sendApplication({
   toEmail,
   coverLetter,
   jobTitle,
   cvUrl,
+  templateId,
 }: SendApplicationParams) {
   const response = await fetch('/api/send-email', {
     method: 'POST',
@@ -19,6 +30,7 @@ export async function sendApplication({
       coverLetter,
       jobTitle,
       cvUrl,
+      templateId: resolveTemplateId(templateId),
     }),
   });
 

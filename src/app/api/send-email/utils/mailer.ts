@@ -47,7 +47,12 @@ function formatCoverLetterHtml(coverLetter: string) {
   return escapeHtml(coverLetter.trim()).replaceAll('\n', '<br>');
 }
 
-function buildApplicationBodies({ coverLetter, jobTitle, cvUrl }: SendEmailSchemaValues) {
+function buildApplicationBodies({
+  coverLetter,
+  jobTitle,
+  cvUrl,
+  templateId,
+}: SendEmailSchemaValues) {
   const trimmedJobTitle = jobTitle.trim();
   const trimmedCvUrl = cvUrl.trim();
   const trimmedCoverLetter = coverLetter.trim();
@@ -63,6 +68,7 @@ CV: ${trimmedCvUrl}
     jobTitle: escapeHtml(trimmedJobTitle),
     coverLetterHtml: formatCoverLetterHtml(trimmedCoverLetter),
     cvUrl: escapeHtml(trimmedCvUrl),
+    templateId,
   });
 
   return { text, html };
