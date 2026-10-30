@@ -11,10 +11,10 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
     "@hookform/resolvers": "^5.2.2",
     "@reduxjs/toolkit": "^2.9.0",
     "next": "15.5.7",
+    "nodemailer": "^10.3.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.63.0",
@@ -27,6 +27,7 @@
     "@eslint/eslintrc": "@hookform/resolvers/zod",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
