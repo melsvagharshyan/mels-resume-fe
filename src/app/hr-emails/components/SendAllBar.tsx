@@ -34,8 +34,8 @@ export default function SendAllBar({
         <div>
           <h1 className="text-xl font-bold tracking-tight text-[var(--foreground)]">HR emails</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Fetch React / Front-End companies from the last 10 Djinni pages, then send the current
-            cover letter and CV to all {total} contacts.
+            Fetch React / Front-End emails from Djinni, hh.ru, Habr Career, and DOU (~{total} ready),
+            skip Ulta / Ultahost, then send the current cover letter and CV to all contacts.
           </p>
         </div>
         <p className="rounded-full border border-[var(--border)] px-2.5 py-1 text-xs text-[var(--muted)]">

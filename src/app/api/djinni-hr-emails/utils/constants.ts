@@ -19,6 +19,11 @@ export const EMAIL_REGEX = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\
 
 export const IGNORED_EMAIL_DOMAINS = [
   'djinni.co',
+  'hh.ru',
+  'habr.com',
+  'career.habr.com',
+  'dou.ua',
+  'jobs.dou.ua',
   'example.com',
   'example.org',
   'domain.com',
@@ -34,12 +39,20 @@ export const IGNORED_FILE_EXTENSIONS = /\.(png|jpe?g|gif|svg|webp|avif|css|js|ic
 
 export const IGNORED_WEBSITE_HOSTS = [
   'djinni.co',
+  'hh.ru',
+  'habr.com',
+  'career.habr.com',
+  'dou.ua',
+  'jobs.dou.ua',
   'linkedin.com',
   'facebook.com',
   'instagram.com',
   'twitter.com',
   'x.com',
   't.me',
+  'youtube.com',
+  'tiktok.com',
+  'github.com',
 ];
 
 export const PREFERRED_EMAIL_PREFIXES = [

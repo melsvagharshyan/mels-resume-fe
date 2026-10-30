@@ -3,27 +3,31 @@ import { toast } from 'sonner';
 import { sendApplication } from '@/app/job-apply/utils/helpers';
 import { coverLetterTexts, cvUrls, tabTitles } from '@/app/job-apply/utils/constants';
 import type { ApplyTab } from '@/app/job-apply/utils/types';
-import { useLazyGetDjinniHrContactsQuery } from '@/app/store/hr-emails/hr-emails.api';
+import { useLazyGetHrContactsQuery } from '@/app/store/hr-emails/hr-emails.api';
+import { isBlockedCompany } from './blocked';
 import { loadStoredContacts, saveStoredContacts } from './helpers';
 import type { HrCompany } from './types';
 
 export function useHrContacts() {
   const [contacts, setContacts] = useState<HrCompany[]>([]);
-  const [fetchContacts, { isFetching }] = useLazyGetDjinniHrContactsQuery();
+  const [fetchContacts, { isFetching }] = useLazyGetHrContactsQuery();
 
   useEffect(() => {
-    setContacts(loadStoredContacts());
+    setContacts(loadStoredContacts().filter((contact) => !isBlockedCompany(contact.company)));
   }, []);
 
   const updateContacts = async () => {
     try {
       const data = await fetchContacts().unwrap();
-      setContacts(data);
-      saveStoredContacts(data);
-      toast.success(`Found ${data.length} emails on Djinni`, { duration: 2000 });
+      const filtered = data.filter((contact) => !isBlockedCompany(contact.company));
+      setContacts(filtered);
+      saveStoredContacts(filtered);
+      toast.success(`Found ${filtered.length} emails (Djinni, hh.ru, Habr, DOU)`, {
+        duration: 2000,
+      });
     } catch (error) {
       console.error('Failed to update HR emails', error);
-      toast.error('Failed to fetch emails from Djinni', { duration: 2500 });
+      toast.error('Failed to fetch emails from professional sources', { duration: 2500 });
     }
   };
 
@@ -35,8 +39,10 @@ export function useSendAllHrEmails(companies: HrCompany[]) {
   const [isSending, setIsSending] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  const sendable = companies.filter((company) => !isBlockedCompany(company.company));
+
   const sendAll = async () => {
-    if (companies.length === 0) return;
+    if (sendable.length === 0) return;
 
     setIsSending(true);
     setProgress(0);
@@ -44,7 +50,7 @@ export function useSendAllHrEmails(companies: HrCompany[]) {
     let sent = 0;
     let failed = 0;
 
-    for (const [index, company] of companies.entries()) {
+    for (const [index, company] of sendable.entries()) {
       try {
         await sendApplication({
           toEmail: company.email,
@@ -76,7 +82,7 @@ export function useSendAllHrEmails(companies: HrCompany[]) {
     setSelectedTab,
     isSending,
     progress,
-    total: companies.length,
+    total: sendable.length,
     sendAll,
   };
 }

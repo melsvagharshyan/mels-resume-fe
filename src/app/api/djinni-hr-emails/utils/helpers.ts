@@ -36,7 +36,7 @@ export async function mapWithConcurrency<T, R>(
   return results;
 }
 
-async function fetchHtml(url: string): Promise<string | null> {
+export async function fetchHtml(url: string): Promise<string | null> {
   try {
     const response = await fetch(url, {
       headers: { 'User-Agent': USER_AGENT, Accept: 'text/html' },
@@ -134,7 +134,7 @@ function getHostname(url: string): string | null {
   }
 }
 
-function normalizeWebsite(url: string | undefined): string | null {
+export function normalizeWebsite(url: string | undefined): string | null {
   if (!url) return null;
   try {
     const { origin, hostname } = new URL(url.startsWith('http') ? url : `https://${url}`);
@@ -182,7 +182,7 @@ function emailPriority(email: string): number {
   return PREFERRED_EMAIL_PREFIXES.some((preferred) => prefix.startsWith(preferred)) ? 0 : 1;
 }
 
-async function findWebsiteEmails(website: string): Promise<string[]> {
+export async function findWebsiteEmails(website: string): Promise<string[]> {
   const host = getHostname(website);
   if (!host) return [];
 
